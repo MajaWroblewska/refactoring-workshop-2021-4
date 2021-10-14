@@ -16,6 +16,27 @@ UnexpectedEventException::UnexpectedEventException()
     : std::runtime_error("Unexpected event received!")
 {}
 
+
+
+SnakeSegment::SnakeSegmentIPort & p_displayPort, IPort& p_foodPort, IPort& p_scorePort, std::string const& p_config)
+    : m_displayPort(p_displayPort),
+      m_foodPort(p_foodPort),
+      m_scorePort(p_scorePort),
+      m_paused(false)
+{
+
+}
+bool SnakeSegment::isSegmentAtPosition(int x, int y) const
+{
+    return m_segments.end() !=  std::find_if(m_segments.cbegin(), m_segments.cend(),
+        [x, y](auto const& segment){ return segment.x == x and segment.y == y; });
+}
+
+bool SnakeSegment::isPositionOutsideMap(int x, int y) const
+{
+    return x < 0 or y < 0 or x >= m_mapDimension.first or y >= m_mapDimension.second;
+}
+
 Controller::Controller(IPort& p_displayPort, IPort& p_foodPort, IPort& p_scorePort, std::string const& p_config)
     : m_displayPort(p_displayPort),
       m_foodPort(p_foodPort),
@@ -62,16 +83,7 @@ Controller::Controller(IPort& p_displayPort, IPort& p_foodPort, IPort& p_scorePo
     }
 }
 
-bool Controller::isSegmentAtPosition(int x, int y) const
-{
-    return m_segments.end() !=  std::find_if(m_segments.cbegin(), m_segments.cend(),
-        [x, y](auto const& segment){ return segment.x == x and segment.y == y; });
-}
 
-bool Controller::isPositionOutsideMap(int x, int y) const
-{
-    return x < 0 or y < 0 or x >= m_mapDimension.first or y >= m_mapDimension.second;
-}
 
 void Controller::sendPlaceNewFood(int x, int y)
 {

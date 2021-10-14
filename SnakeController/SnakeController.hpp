@@ -72,4 +72,20 @@ private:
     bool m_paused;
 };
 
+class SnakeSegment : public Controller
+{
+public:
+    SnakeSegment(IPort& p_displayPort, IPort& p_foodPort, IPort& p_scorePort, std::string const& p_config);
+
+    SnakeSegment(SnakeSegment const& p_rhs) = delete;
+    SnakeSegment& operator=(SnakeSegment const& p_rhs) = delete;
+
+    void receive(std::unique_ptr<Event> e) override;
+    
+    bool isSegmentAtPosition(int x, int y) const;
+};
+
+    
+    
+
 } // namespace Snake
